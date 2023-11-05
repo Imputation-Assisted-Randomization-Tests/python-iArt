@@ -6,7 +6,7 @@ I-ART (Imputation-Assisted Randomization Tests) is a Python package designed for
 
 ## Installation
 
-To install I-ART, run the following command:
+To install [I-ART](https://pypi.org/project/causal-i-art/), run the following command:
 
 ```bash
 pip install causal-i-art
