@@ -293,33 +293,50 @@ def transformX(X, threshold=0.1, verbose=True):
     return X
 
 def iartest(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,verbose = False, covariate_adjustment = False, alpha = 0.05, alternative = "one-sided",random_state=None):
-    """
-    I-ART: Imputation-Assisted Randomization Tests
+    """Imputation-Assisted Randomization Tests
  
     Usage Example:
     --------------
     >> Z = np.array([1, 1, 1, 1, 0, 0, 0, 0])
+
     >> X = np.array([[5.1, 3.5], [4.9, np.nan], [4.7, 3.2], [4.5, np.nan], [7.2, 2.3], [8.6, 3.1], [6.0, 3.6], [8.4, 3.9]])
+
     >> Y = np.array([[4.4, 0.5], [4.3, 0.7], [4.1, np.nan], [5.0, 0.4], [1.7, 0.1], [np.nan, 0.2], [1.4, np.nan], [1.7, 0.4]])
+
     >> result = iartest(Z=Z,X=X,Y=Y,L=1000,verbose=1)
 
-    Args:
-    Z: 2D array of observed treatment indicators
-    X: 2D array of observed covariates
-    Y: 2D array of K outcomes with missing values
-    S: 2D array of the strata indicators
-    threshholdForX: threshhold for missing outcome to be imputed in advance
-    G: a string for the eight available choice or a function that takes (Z, M, Y_k) as input and returns the imputed complete values 
-    L: number of Monte Carlo simulations (default is 10000)
-    verbose: a boolean indicating whether to print training start and end (default is False)
-    covarite_adjustment: a boolean indicating whether to do covariate adjustment (default is False)
-    alpha: significance level (default is 0.05)
-    alternative: a string indicating the alternative hypothesis (default is "one-sided")
-    random_state: an integer indicating the random seed (default is None)
+    Parameters
+    ----------
+    Z : 2D array of observed treatment indicators
 
-    Returns:
-    p_values: a 1D array of p-values for lenY outcomes
-    reject: a boolean indicating whether the null hypothesis is rejected for each outcome
+    X : 2D array of observed covariates
+
+    Y : 2D array of K outcomes with missing values
+
+    S : 2D array of the strata indicators
+
+    threshholdForX : threshhold for missing outcome to be imputed in advance
+
+    G : a string for the eight available choice or a function that takes (
+        Z, M, Y_k) as input and returns the imputed complete values 
+
+    L : number of Monte Carlo simulations (default is 10000)
+
+    verbose : a boolean indicating whether to print training start and end (default is False)
+
+    covarite_adjustment : a boolean indicating whether to do covariate adjustment (default is False)
+
+    alpha : significance level (default is 0.05)
+
+    alternative : a string indicating the alternative hypothesis (default is "one-sided")
+
+    random_state : an integer indicating the random seed (default is None)
+
+    Returns
+    ----------
+    p_values : a 1D array of p-values for lenY outcomes
+
+    reject : a boolean indicating whether the null hypothesis is rejected for each outcome
     """
     start_time = time.time()
 

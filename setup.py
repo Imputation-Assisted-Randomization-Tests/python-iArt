@@ -5,13 +5,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="causal-i-art",
-    version="0.1.0",
+    version="0.1.1",
     author="Siyu Heng, Jiawei Zhang, and Yang Feng",
     author_email="",
     description="I-ART: A Generalized Framework for Imputation-Assisted Randomization Tests",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/jiawei-zhang-a/I-ART",
+    url="https://github.com/Causal-I-ART/I-ART",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
