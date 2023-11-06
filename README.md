@@ -1,5 +1,13 @@
 # I-ART: Imputation-Assisted Randomization Tests
 
+## Authors
+
+Siyu Heng*, Jiawei Zhang*, and Yang Feng (* indicates equal contribution)
+
+## Maintainers
+
+Siyu Heng (Email: siyuheng@nyu.edu), Jiawei Zhang (Email: jz4721@nyu.edu), and Yang Feng (yang.feng@nyu.edu)
+
 ## Description
 
 I-ART (Imputation-Assisted Randomization Tests) is a Python package designed for conducting finite-population-exact randomization tests in design-based causal studies with missing outcomes. It offers a robust solution to handle missing data in causal inference, leveraging the potential outcomes framework and integrating various outcome imputation algorithms.
