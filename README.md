@@ -2,11 +2,11 @@
 
 ## Authors
 
-Siyu Heng*, Jiawei Zhang*, and Yang Feng (* indicates equal contribution)
+Jiawei Zhang*, Siyu Heng*, and Yang Feng (* indicates equal contribution)
 
 ## Maintainers
 
-Siyu Heng (Email: siyuheng@nyu.edu), Jiawei Zhang (Email: jz4721@nyu.edu), and Yang Feng (Email: yang.feng@nyu.edu)
+Jiawei Zhang (Email: jz4721@nyu.edu), Siyu Heng (Email: siyuheng@nyu.edu), and Yang Feng (Email: yang.feng@nyu.edu)
 
 ## Description
 
