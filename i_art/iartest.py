@@ -43,11 +43,14 @@ def getY(G, Z, X,Y, covariate_adjustment = False):
     df_imputed = G.fit_transform(df_Z)
 
     Y_head = df_imputed[:, indexY:indexY+lenY]
+    X = df_imputed[:, 1:1+X.shape[1]]
     if covariate_adjustment:
         warnings.filterwarnings(action='ignore', category=DataConversionWarning)
-        G_adjusted.fit(X, Y_head)
-        Y_head2 = G_adjusted.predict(X)
-        return Y_head - Y_head2
+        # use linear regression to adjust the predicted Y values based on X
+        lm = linear_model.LinearRegression()
+        lm.fit(X, Y_head)
+        Y_head_adjusted = lm.predict(X)
+        return Y_head - Y_head_adjusted
     else:
         return Y_head
 
@@ -399,7 +402,10 @@ def iartest(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,
     # perform Holm-Bonferroni correction
     p_values = []
     for i in range(Y.shape[1]):
-        p_values.append(np.mean(t_sim[:,i] >= t_obs[i], axis=0))
+        if alternative == "one-sided":
+            p_values.append(np.mean(t_sim[:,i] >= t_obs[i], axis=0))
+        else:
+            p_values.append(np.mean(np.abs(t_sim[:,i] - np.mean(t_sim[:,i])) >= np.abs(t_obs[i] - np.mean(t_sim[:,i])), axis=0))
 
     # perform Holm-Bonferroni correction
     reject = holm_bonferroni(p_values,alpha = alpha)
@@ -408,4 +414,3 @@ def iartest(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,
         print("\nthe time used for the prediction and re-prediction framework:"+str(time.time() - start_time) + " seconds\n")
     
     return reject, p_values
-
