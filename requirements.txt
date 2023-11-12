@@ -6,3 +6,4 @@ scikit-learn == 1.2.2
 xgboost == 1.7.4
 statsmodels == 0.13.5
 lightgbm == 3.2.1
+pytest
