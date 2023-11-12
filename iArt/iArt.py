@@ -144,12 +144,16 @@ def preprocess(Z, X, Y, S):
     """
 
     # Reshape Z, X, Y, S, M to (-1, 1) if they're not already in that shape
+    Z = np.array(Z)
+    X = np.array(X)
+    Y = np.array(Y)
     X = X.reshape(-1, X.shape[1])
     Z = Z.reshape(-1, 1)
     if S == None:
         S = np.ones(Z.shape)
         M = np.isnan(Y).reshape(-1, Y.shape[1])
         return Z, X, Y, S, M
+    S = np.array(S)
     S = S.reshape(-1, 1)
 
     # Concatenate Z, X, Y, S, and M into a single DataFrame
@@ -173,13 +177,9 @@ def check_param(Z, X, Y, S, G, L, verbose, covariate_adjustment,alpha,alternativ
     Check the validity of the input parameters
     """
 
-    # List of variables to check
-    variables = [Z, X, Y]
-
-    # Check if each variable is a numpy array
-    for var in variables:
-        if not isinstance(var, np.ndarray):
-            raise ValueError("Z, X, Y, S must be numpy.ndarray")
+    # check the dimension of Z, X, Y, S
+    if Z.shape[0] != X.shape[0] or Z.shape[0] != Y.shape[0] or Z.shape[0] != S.shape[0]:
+        raise ValueError("Z, X, Y, S must have the same number of rows")
 
     # Check Z: must be one of 1, 0, 1.0, 0.0
     if not np.all(np.isin(Z, [0, 1])):
@@ -192,10 +192,6 @@ def check_param(Z, X, Y, S, G, L, verbose, covariate_adjustment,alpha,alternativ
     # Check Y: must be a 2D array
     if len(Y.shape) != 2:
         raise ValueError("Y must be a 2D array")
-
-    # Check S: must all be integer
-    if S != None and not np.all(np.equal(S, S.astype(int))):
-        raise ValueError("S must contain only integer values")
 
     # Check L: must be an integer greater than 0
     if not isinstance(L, int) or L <= 0:
@@ -295,63 +291,70 @@ def transformX(X, threshold=0.1, verbose=True):
 
     return X
 
-def iartest(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,verbose = False, covariate_adjustment = False, alpha = 0.05, alternative = "one-sided",random_state=None):
-    """Imputation-Assisted Randomization Tests
- 
-    Usage Example:
-    --------------
-    >> Z = np.array([1, 1, 1, 1, 0, 0, 0, 0])
-
-    >> X = np.array([[5.1, 3.5], [4.9, np.nan], [4.7, 3.2], [4.5, np.nan], [7.2, 2.3], [8.6, 3.1], [6.0, 3.6], [8.4, 3.9]])
-
-    >> Y = np.array([[4.4, 0.5], [4.3, 0.7], [4.1, np.nan], [5.0, 0.4], [1.7, 0.1], [np.nan, 0.2], [1.4, np.nan], [1.7, 0.4]])
-
-    >> result = iartest(Z=Z,X=X,Y=Y,L=1000,verbose=1)
+def test(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,verbose = False, covariate_adjustment = False, random_state=None, alternative = "one-sided", alpha = 0.05):
+    """Imputation-Assisted Randomization Tests (iArt) for testing 
+    the null hypothesis that the treatment has no effect on the outcome.
 
     Parameters
     ----------
-    Z : 2D array of observed treatment indicators
+    Z : array_like
+        Z is the array of observed treatment indicators,  and
 
-    X : 2D array of observed covariates
+    X, Y : array_like
+        X is 2D array of observed covariates, Y is 2D array of observed outcomes,
+    
+    S : array_like, default: None
+        S is the array of observed strata indicators, default is None
+        
+    threshholdForX : float, default: 0.1
+        The threshhold for missing outcome to be imputed in advance in covariate X (default is 0.1)
 
-    Y : 2D array of K outcomes with missing values
-
-    S : 2D array of the strata indicators
-
-    threshholdForX : threshhold for missing outcome to be imputed in advance
-
-    G : a string for the eight available choice or a function that takes (
+    G : str or function, default: 'bayesianridge'
+        A string for the eight available choice or a function that takes (
         Z, M, Y_k) as input and returns the imputed complete values 
 
-    L : number of Monte Carlo simulations (default is 10000)
+    L : int, default: 10000
+        The number of Monte Carlo simulations 
 
-    verbose : a boolean indicating whether to print training start and end (default is False)
+    verbose : bool
+        A boolean indicating whether to print training start and end (default is False)
 
-    covarite_adjustment : a boolean indicating whether to do covariate adjustment (default is False)
+    covarite_adjustment : bool
+        A boolean indicating whether to do covariate adjustment (default is False)
 
-    alpha : significance level (default is 0.05)
+    random_state : {None, int, `numpy.random.Generator`,`numpy.random.RandomState`}, default: None
+        If `seed` is None (or `np.random`), the `numpy.random.RandomState`
+        singleton is used.
+        If `seed` is an int, a new ``RandomState`` instance is used,
+        seeded with `seed`.
+        If `seed` is already a ``Generator`` or ``RandomState`` instance then
+        that instance is used.
 
-    alternative : a string indicating the alternative hypothesis (default is "one-sided")
+    alternative : {'two-sided', 'one-sided'} default: 'one-sided'
+        A string indicating the alternative hypothesis (default is "one-sided")
 
-    random_state : an integer indicating the random seed (default is None)
+    alpha : float, default: 0.05
+        Significance level
 
     Returns
     ----------
-    p_values : a 1D array of p-values for lenY outcomes
+    p_values : array_like
+        1D array of p-values for lenY outcomes
 
-    reject : a boolean indicating whether the null hypothesis is rejected for each outcome
+    reject : array_like
+        A boolean indicating whether the null hypothesis is rejected for each outcome
     """
     start_time = time.time()
+
+    # preprocess the variable
+    Z, X, Y, S, M = preprocess(Z, X, Y, S)
+    X = transformX(X,threshholdForX,verbose)
 
     # Check the validity of the input parameters
     check_param(Z, X, Y, S, G, L, verbose,covariate_adjustment,alpha,alternative,random_state)
 
     # Set random seed
     np.random.seed(random_state)
-
-    # preprocess the variable
-    Z, X, Y, S, M = preprocess(Z, X, Y, S)
-    X = transformX(X,threshholdForX,verbose)
 
     # choose the imputation model
     G_model = choosemodel(G)

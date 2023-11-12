@@ -1,4 +1,4 @@
-# I-ART: Imputation-Assisted Randomization Tests
+# iArt: Imputation-Assisted Randomization Tests
 
 ## Authors
 
@@ -10,19 +10,19 @@ Jiawei Zhang (Email: jz4721@nyu.edu), Siyu Heng (Email: siyuheng@nyu.edu), and Y
 
 ## Description
 
-I-ART (Imputation-Assisted Randomization Tests) is a Python package designed for conducting finite-population-exact randomization tests in design-based causal studies with missing outcomes. It offers a robust solution to handle missing data in causal inference, leveraging the potential outcomes framework and integrating various outcome imputation algorithms.
+iArt (Imputation-Assisted Randomization Tests) is a Python package designed for conducting finite-population-exact randomization tests in design-based causal studies with missing outcomes. It offers a robust solution to handle missing data in causal inference, leveraging the potential outcomes framework and integrating various outcome imputation algorithms.
 
 ## Installation
 
-To install [I-ART](https://pypi.org/project/py-i-art/), run the following command:
+To install [iArt](https://pypi.org/project/py-iArt/), run the following command:
 
 ```bash
-pip install py-i-art
+pip install py-iArt
 ```
 
 ## Usage
 
-Here is a basic example of how to use I-ART:
+Here is a basic example of how to use iArt:
 
 ```python
 import numpy as np
@@ -33,7 +33,7 @@ X = np.array([[5.1, 3.5], [4.9, np.nan], [4.7, 3.2], [4.5, np.nan], [7.2, 2.3], 
 Y = np.array([[4.4, 0.5], [4.3, 0.7], [4.1, np.nan], [5.0, 0.4], [1.7, 0.1], [np.nan, 0.2], [1.4, np.nan], [1.7, 0.4]])
 result = iartest(Z=Z, X=X, Y=Y, L=1000, verbose=True)
 ```
-Detailed usage can be found here [ReadDoc](https://i-art.readthedocs.io/en/latest/)
+Detailed usage can be found here [ReadDoc](https://iart.readthedocs.io/en/latest/)
 
 ## Features
 
@@ -45,16 +45,17 @@ Detailed usage can be found here [ReadDoc](https://i-art.readthedocs.io/en/lates
 
 ## Contributing
 
-Your contributions to I-ART are highly appreciated! If you're looking to contribute, we encourage you to open issues for any bugs or feature suggestions, or submit pull requests with your proposed changes. 
+Your contributions to iArt are highly appreciated! If you're looking to contribute, we encourage you to open issues for any bugs or feature suggestions, or submit pull requests with your proposed changes. 
 
 ### Setting Up a Development Environment
 
-To set up a development environment for contributing to I-ART, follow these steps:
+To set up a development environment for contributing to iArt, follow these steps:
 
 ```bash
 python -m venv venv
 source venv/bin/activate 
 pip install -r requirements.txt
+python setup.py install
 ```
 This creates a virtual environment (`venv`) for Python and activates it, allowing you to work on the package without affecting your global Python environment.
 
@@ -62,7 +63,7 @@ This creates a virtual environment (`venv`) for Python and activates it, allowin
 This project is licensed under the MIT License
 
 ## Citation
-If you use I-ART in your research, please consider citing it:
+If you use iArt in your research, please consider citing it:
 
 ```code
 @misc{heng2023designbased,

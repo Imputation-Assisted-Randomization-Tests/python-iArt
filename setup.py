@@ -4,14 +4,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="py-i-art",
-    version="0.1.1",
+    name="py-iArt",
+    version="0.1.0",
     author="Siyu Heng, Jiawei Zhang, and Yang Feng",
     author_email="",
-    description="I-ART: A Generalized Framework for Imputation-Assisted Randomization Tests",
+    description="iArt: A Generalized Framework for Imputation-Assisted Randomization Tests",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Imputation-Assisted-Randomization-Tests/py-I-ART",
+    url="https://github.com/Imputation-Assisted-Randomization-Tests/py-iArt",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
