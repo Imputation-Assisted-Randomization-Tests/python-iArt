@@ -213,9 +213,9 @@ def check_param(Z, X, Y, S, G, L, verbose, covariate_adjustment,alpha,alternativ
     if covariate_adjustment not in [True, False, 1, 0]:
         raise ValueError("covariate_adjustment must be True or False")
 
-    # Check alternative: must be one of "one-sided" or "two-sided"
-    if alternative not in ["one-sided", "two-sided"]:
-        raise ValueError("alternative must be one of 'one-sided' or 'two-sided'")
+    # Check alternative: must be one of "greater", "less" or "two-sided" 
+    if alternative not in ["greater", "less", "two-sided"]:
+        raise ValueError("alternative must be one of greater, less or two-sided")
     
     # Check random_state: must be an integer greater than 0 or None
     if random_state != None and (not isinstance(random_state, int) or random_state <= 0):
@@ -291,36 +291,36 @@ def transformX(X, threshold=0.1, verbose=True):
 
     return X
 
-def test(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,verbose = False, covariate_adjustment = False, random_state=None, alternative = "one-sided", alpha = 0.05):
+def test(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,verbose = False, covariate_adjustment = False, random_state=None, alternative = "greater", alpha = 0.05):
     """Imputation-Assisted Randomization Tests (iArt) for testing 
     the null hypothesis that the treatment has no effect on the outcome.
 
     Parameters
     ----------
     Z : array_like
-        Z is the array of observed treatment indicators,  and
+        Z is the array of observed treatment indicators
 
     X, Y : array_like
         X is 2D array of observed covariates, Y is 2D array of observed outcomes,
     
     S : array_like, default: None
-        S is the array of observed strata indicators, default is None
+        S is the array of observed strata indicators
         
     threshholdForX : float, default: 0.1
-        The threshhold for missing outcome to be imputed in advance in covariate X (default is 0.1)
+        The threshhold for missing outcome to be imputed in advance in covariate X
 
     G : str or function, default: 'bayesianridge'
-        A string for the eight available choice or a function that takes (
-        Z, M, Y_k) as input and returns the imputed complete values 
+        A string for the eight available choice or a function that takes 
+        (Z, M, Y_k) as input and returns the imputed complete values 
 
     L : int, default: 10000
         The number of Monte Carlo simulations 
 
-    verbose : bool
-        A boolean indicating whether to print training start and end (default is False)
+    verbose : bool, default: False
+        A boolean indicating whether to print training start and end 
 
-    covarite_adjustment : bool
-        A boolean indicating whether to do covariate adjustment (default is False)
+    covarite_adjustment : bool, default: False
+        A boolean indicating whether to do covariate adjustment ()
 
     random_state : {None, int, `numpy.random.Generator`,`numpy.random.RandomState`}, default: None
         If `seed` is None (or `np.random`), the `numpy.random.RandomState`
@@ -330,8 +330,8 @@ def test(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,ver
         If `seed` is already a ``Generator`` or ``RandomState`` instance then
         that instance is used.
 
-    alternative : {'two-sided', 'one-sided'} default: 'one-sided'
-        A string indicating the alternative hypothesis (default is "one-sided")
+    alternative : {'greater','less','two-sided'}, default: 'greater'
+        A string indicating the alternative hypothesis 
 
     alpha : float, default: 0.05
         Significance level
@@ -405,8 +405,10 @@ def test(*,Z, X, Y, G='bayesianridge', S=None,L = 10000,threshholdForX = 0.1,ver
     # perform Holm-Bonferroni correction
     p_values = []
     for i in range(Y.shape[1]):
-        if alternative == "one-sided":
+        if alternative == "greater":
             p_values.append(np.mean(t_sim[:,i] >= t_obs[i], axis=0))
+        elif alternative == "less":
+            p_values.append(np.mean(t_sim[:,i] <= t_obs[i], axis=0))
         else:
             p_values.append(np.mean(np.abs(t_sim[:,i] - np.mean(t_sim[:,i])) >= np.abs(t_obs[i] - np.mean(t_sim[:,i])), axis=0))
 
